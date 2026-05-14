@@ -198,3 +198,5 @@ fig_dash = px.box(
     title=f"{valasztott} havi eloszlása"
 )
 st.plotly_chart(fig_dash, use_container_width=True)
+
+# force rebuild
