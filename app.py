@@ -119,3 +119,54 @@ fig_box = px.box(
 )
 
 st.plotly_chart(fig_box, use_container_width=True)
+
+st.header("Interaktív dashboard")
+
+# Változóválasztó lenyíló lista
+valtozo = st.selectbox(
+    "Válassz változót:",
+    options={
+        "Hőmérséklet (t)": "t",
+        "Szélsebesség (fs)": "fs",
+        "Légnyomás (p)": "p"
+    }
+)
+
+# Év tartomány csúszka
+ev_min = int(df["Év"].min())
+ev_max = int(df["Év"].max())
+
+ev_tartomany = st.slider(
+    "Év tartomány:",
+    min_value=ev_min,
+    max_value=ev_max,
+    value=(ev_min, ev_max)
+)
+
+# Adatok szűrése
+d = df[(df["Év"] >= ev_tartomany[0]) & (df["Év"] <= ev_tartomany[1])]
+
+# Idősoros grafikon
+fig_ts = px.line(
+    d,
+    x="Time",
+    y=valtozo,
+    title=f"{valtozo} idősor ({ev_tartomany[0]}–{ev_tartomany[1]})",
+    labels={"Time": "Dátum", valtozo: "Érték"}
+)
+
+st.plotly_chart(fig_ts, use_container_width=True)
+
+# Éves átlag grafikon
+eves = d.groupby("Év")[valtozo].mean().reset_index()
+
+fig_year = px.line(
+    eves,
+    x="Év",
+    y=valtozo,
+    markers=True,
+    title=f"Éves átlagos {valtozo}",
+    labels={"Év": "Év", valtozo: "Éves átlag"}
+)
+
+st.plotly_chart(fig_year, use_container_width=True)
