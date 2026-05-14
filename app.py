@@ -35,12 +35,17 @@ def load_dataframe():
         with z.open(csv_name) as f:
             df = pd.read_csv(
                 f,
-                sep=r"\s*;\s*",     # <<< regex szeparátor: whitespace + pontosvessző
-                engine="python",    # <<< kell a regexhez
-                header=5,           # <<< fejléc a 6. sorban
+                sep=r"\s*;\s*",     # regex szeparátor
+                engine="python",
+                header=5,
                 encoding="latin2",
                 on_bad_lines="skip"
             )
+
+    # -----------------------------------------------------
+    # ⭐ JAVÍTÁS: Time oszlop dátummá alakítása
+    # -----------------------------------------------------
+    df["Time"] = pd.to_datetime(df["Time"], format="%Y%m%d", errors="coerce")
 
     return df
 
@@ -63,8 +68,8 @@ def load_basic_info():
 
     query = """
         SELECT 
-            MIN(year(CAST(Time AS DATE))) AS ev_min,
-            MAX(year(CAST(Time AS DATE))) AS ev_max
+            MIN(year(Time)) AS ev_min,
+            MAX(year(Time)) AS ev_max
         FROM adatok
     """
 
@@ -80,12 +85,12 @@ def load_aggregated(ev_from, ev_to):
 
     q_ev = f"""
         SELECT
-            year(CAST(Time AS DATE)) AS Ev,
+            year(Time) AS Ev,
             AVG(t) AS atlag_homerseklet,
             AVG(p) AS atlag_legnyomas,
             AVG(fs) AS atlag_szelsebesseg
         FROM adatok
-        WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
+        WHERE year(Time) BETWEEN {ev_from} AND {ev_to}
         GROUP BY Ev
         ORDER BY Ev
     """
@@ -93,11 +98,11 @@ def load_aggregated(ev_from, ev_to):
 
     q_havi = f"""
         SELECT
-            year(CAST(Time AS DATE)) AS Ev,
-            month(CAST(Time AS DATE)) AS Honap,
+            year(Time) AS Ev,
+            month(Time) AS Honap,
             AVG(t) AS atlag_homerseklet
         FROM adatok
-        WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
+        WHERE year(Time) BETWEEN {ev_from} AND {ev_to}
         GROUP BY Ev, Honap
         ORDER BY Ev, Honap
     """
@@ -105,10 +110,10 @@ def load_aggregated(ev_from, ev_to):
 
     q_box = f"""
         SELECT
-            month(CAST(Time AS DATE)) AS Honap,
+            month(Time) AS Honap,
             t AS Homerseklet
         FROM adatok
-        WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
+        WHERE year(Time) BETWEEN {ev_from} AND {ev_to}
     """
     box_df = con.execute(q_box).fetchdf()
 
@@ -123,14 +128,14 @@ def load_dashboard(ev_from, ev_to):
 
     q = f"""
         SELECT
-            CAST(Time AS DATE) AS Datum,
-            year(CAST(Time AS DATE)) AS Ev,
-            month(CAST(Time AS DATE)) AS Honap,
+            Time AS Datum,
+            year(Time) AS Ev,
+            month(Time) AS Honap,
             t AS Homerseklet,
             p AS Legnyomas,
             fs AS Szelsebesseg
         FROM adatok
-        WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
+        WHERE year(Time) BETWEEN {ev_from} AND {ev_to}
         ORDER BY Datum
     """
     return con.execute(q).fetchdf()
