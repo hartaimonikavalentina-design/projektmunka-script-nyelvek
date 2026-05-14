@@ -170,3 +170,30 @@ fig_year = px.line(
 )
 
 st.plotly_chart(fig_year, use_container_width=True)
+
+st.header("Mérőállomás térképen")
+
+# Mérőállomás metaadat
+station_name = "Fertőrákos"
+station_lat = 47.7147
+station_lon = 16.6658
+
+df_station = pd.DataFrame({
+    "StationName": [station_name],
+    "Lat": [station_lat],
+    "Lon": [station_lon]
+})
+
+# Térkép megjelenítése
+fig_map = px.scatter_mapbox(
+    df_station,
+    lat="Lat",
+    lon="Lon",
+    hover_name="StationName",
+    zoom=7,
+    title="Mérőállomás térképen – Fertőrákos"
+)
+
+fig_map.update_layout(mapbox_style="open-street-map")
+
+st.plotly_chart(fig_map, use_container_width=True)
