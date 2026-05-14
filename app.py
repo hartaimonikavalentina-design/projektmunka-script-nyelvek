@@ -47,3 +47,21 @@ df["Hónap"] = df["Time"].dt.month
 
 st.success("Az adatok sikeresen beolvasva!")
 st.write(df.head())
+
+import plotly.express as px
+
+st.header("Éves átlaghőmérséklet")
+
+# Éves átlag számítása
+eves_atlag_hom = df.groupby("Év")["t"].mean().reset_index()
+
+# Vonaldiagram Plotly-val
+fig = px.line(
+    eves_atlag_hom,
+    x="Év",
+    y="t",
+    title="Éves átlaghőmérséklet (°C)",
+    markers=True
+)
+
+st.plotly_chart(fig, use_container_width=True)
