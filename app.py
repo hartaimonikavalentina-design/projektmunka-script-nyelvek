@@ -35,7 +35,7 @@ def load_basic_info():
         SELECT 
             MIN(year(CAST(Time AS DATE))) AS ev_min,
             MAX(year(CAST(Time AS DATE))) AS ev_max
-        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=5)
+        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=6)
     """
 
     df = con.execute(query).fetchdf()
@@ -55,7 +55,7 @@ def load_aggregated(ev_from, ev_to):
             AVG(t) AS atlag_homerseklet,
             AVG(p) AS atlag_legnyomas,
             AVG(fs) AS atlag_szelsebesseg
-        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=5)
+        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=6)
         WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
         GROUP BY Ev
         ORDER BY Ev
@@ -68,7 +68,7 @@ def load_aggregated(ev_from, ev_to):
             year(CAST(Time AS DATE)) AS Ev,
             month(CAST(Time AS DATE)) AS Honap,
             AVG(t) AS atlag_homerseklet
-        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=5)
+        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=6)
         WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
         GROUP BY Ev, Honap
         ORDER BY Ev, Honap
@@ -80,7 +80,7 @@ def load_aggregated(ev_from, ev_to):
         SELECT
             month(CAST(Time AS DATE)) AS Honap,
             t AS Homerseklet
-        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=5)
+        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=6)
         WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
     """
     box_df = con.execute(q_box).fetchdf()
@@ -102,7 +102,7 @@ def load_dashboard(ev_from, ev_to):
             t AS Homerseklet,
             p AS Legnyomas,
             fs AS Szelsebesseg
-        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=5)
+        FROM read_csv_auto('{CSV_PATH}', delim='\\t', header=True, skip=6)
         WHERE year(CAST(Time AS DATE)) BETWEEN {ev_from} AND {ev_to}
         ORDER BY Datum
     """
