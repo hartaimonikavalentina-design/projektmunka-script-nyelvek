@@ -65,3 +65,31 @@ fig = px.line(
 )
 
 st.plotly_chart(fig, use_container_width=True)
+
+st.header("Éves átlagos légnyomás")
+
+eves_atlag_legny = df.groupby("Év")["p"].mean().reset_index()
+
+fig_legny = px.line(
+    eves_atlag_legny,
+    x="Év",
+    y="p",
+    title="Éves átlagos légnyomás (hPa)",
+    markers=True
+)
+
+st.plotly_chart(fig_legny, use_container_width=True)
+
+st.header("Éves átlagos szélsebesség")
+
+eves_atlag_szel = df.groupby("Év")["fs"].mean().reset_index()
+
+fig_szel = px.line(
+    eves_atlag_szel,
+    x="Év",
+    y="fs",
+    title="Éves átlagos szélsebesség (m/s)",
+    markers=True
+)
+
+st.plotly_chart(fig_szel, use_container_width=True)
