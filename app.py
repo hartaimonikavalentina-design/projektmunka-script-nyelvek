@@ -20,7 +20,7 @@ Ez az alkalmazás egy nagy méretű meteorológiai adatbázisra épül,
 ZIP_PATH = "adatok_meteorologia.zip"
 
 # ---------------------------------------------------------
-# ZIP → CSV → DataFrame beolvasás (header=5)
+# ZIP → CSV → DataFrame beolvasás (regex szeparátor + header=5)
 # ---------------------------------------------------------
 @st.cache_data
 def load_dataframe():
@@ -31,12 +31,13 @@ def load_dataframe():
         csv_files = [f for f in files if f.lower().endswith(".csv")]
         csv_name = csv_files[0]
 
-        # Beolvasás a HELYES fejléc-sorral
+        # Beolvasás a HELYES szeparátorral és fejléc-sorral
         with z.open(csv_name) as f:
             df = pd.read_csv(
                 f,
-                sep=";",
-                header=5,          # <<< EZ A LÉNYEG
+                sep=r"\s*;\s*",     # <<< regex szeparátor: whitespace + pontosvessző
+                engine="python",    # <<< kell a regexhez
+                header=5,           # <<< fejléc a 6. sorban
                 encoding="latin2",
                 on_bad_lines="skip"
             )
@@ -224,5 +225,3 @@ fig_dash = px.box(
     title=f"{valasztott} havi eloszlása"
 )
 st.plotly_chart(fig_dash, use_container_width=True)
-
-# force rebuild
