@@ -10,9 +10,8 @@ import pandas as pd
 
 st.header("Adatbeolvasás")
 
-# CSV beolvasása
 df = pd.read_csv(
-    "adatok meterológia.csv",
+    "adatok_meteorologia.csv",
     sep=";",
     skiprows=5,
     encoding="utf-8",
