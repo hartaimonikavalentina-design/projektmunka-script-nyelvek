@@ -93,3 +93,29 @@ fig_szel = px.line(
 )
 
 st.plotly_chart(fig_szel, use_container_width=True)
+
+st.header("Havi átlaghőmérséklet")
+
+havi_atlag = df.groupby("Hónap")["t"].mean().reset_index()
+
+fig_havi = px.bar(
+    havi_atlag,
+    x="Hónap",
+    y="t",
+    title="Havi átlaghőmérséklet (°C)",
+    labels={"Hónap": "Hónap", "t": "Hőmérséklet (°C)"},
+)
+
+st.plotly_chart(fig_havi, use_container_width=True)
+
+st.header("Havi hőmérséklet-eloszlások (boxplot)")
+
+fig_box = px.box(
+    df,
+    x="Hónap",
+    y="t",
+    title="Havi hőmérséklet-eloszlások",
+    labels={"Hónap": "Hónap", "t": "Hőmérséklet (°C)"},
+)
+
+st.plotly_chart(fig_box, use_container_width=True)
