@@ -20,9 +20,8 @@ Mesterséges Intelligencia Alkalmazásai szakirányú továbbképzés
 """)
 
 # ---------------------------------------------------------
-# Tartalomjegyzék (BALRA IGAZÍTVA)
+# Tartalomjegyzék
 # ---------------------------------------------------------
-
 st.markdown("""
 ## Tartalom
 
@@ -42,7 +41,7 @@ st.markdown("""
 """)
 
 # ---------------------------------------------------------
-# 1. Bevezetés (BALRA IGAZÍTVA)
+# 1. Bevezetés
 # ---------------------------------------------------------
 st.markdown("## 1. Bevezetés")
 
@@ -294,6 +293,23 @@ pivot_havi = havi_df.pivot(index="Ev", columns="Honap", values="atlag_homersekle
 st.line_chart(pivot_havi)
 
 # ---------------------------------------------------------
+# 6. Boxplot és havi eloszlások – szöveges rész
+# ---------------------------------------------------------
+st.markdown("## 6. Boxplot és havi eloszlások")
+
+st.markdown("""
+A havi bontású hőmérséklet-eloszlások lehetővé teszik, hogy ne csak az átlagokat,
+hanem a teljes havi szórást, szélsőértékeket és mediánt is vizsgáljuk.
+
+A boxplot segítségével jól látható:
+- mely hónapokban nagyobb a hőingás,
+- hol vannak kiugró értékek,
+- hogyan változik a hőmérséklet eloszlása az évek során.
+
+Ez különösen hasznos a meteorológiai adatok megbízhatóságának és szezonális mintázatainak vizsgálatához.
+""")
+
+# ---------------------------------------------------------
 # Boxplot
 # ---------------------------------------------------------
 st.header("Havi hőmérséklet-eloszlások (boxplot)")
@@ -336,3 +352,54 @@ fig_dash = px.box(
     title=f"{valasztott} havi eloszlása"
 )
 st.plotly_chart(fig_dash, use_container_width=True)
+
+# ---------------------------------------------------------
+# 7. Interaktív megjelenítés – a felhasználó szerepe
+# ---------------------------------------------------------
+st.markdown("## 7. Interaktív megjelenítés – a felhasználó szerepe")
+
+st.markdown("""
+A felhasználó az alkalmazásban:
+
+- kiválaszthatja a megjelenítendő változót (**t**, **fs**, **p**),
+- beállíthatja az elemzett év tartományát,
+- interaktív idősorokat és éves átlagokat vizsgálhat,
+- térképen megjelenik a Fertőrákos állomás helye.
+
+Ez a projekt egyik legfontosabb része, mert a megjelenítés dinamikusan változtatható,
+anélkül hogy az adatot módosítanánk.
+""")
+
+# ---------------------------------------------------------
+# 8. Sikeres és sikertelen utak, promptolás
+# ---------------------------------------------------------
+st.markdown("## 8. Sikeres és sikertelen utak, promptolás")
+
+st.markdown("""
+A projekt során több kihívás is felmerült:
+
+- A szélsebesség átlagolása elsőre hibás volt (minden év -999 értéket adott).
+- A CSV fejléc nem az első sorban volt → rugalmas beolvasásra volt szükség.
+- A promptolás segített a hibák felismerésében és javításában.
+
+Ezek a lépések jól mutatják, hogy a hibák nem akadályok,
+hanem a fejlesztési folyamat természetes részei.
+""")
+
+# ---------------------------------------------------------
+# 9. Összegzés
+# ---------------------------------------------------------
+st.markdown("## 9. Összegzés")
+
+st.markdown("""
+A projektmunka során sikerült:
+
+- rugalmas adatbeolvasást készíteni,
+- a hiányzó adatokat megfelelően kezelni,
+- többféle statikus és interaktív grafikont készíteni,
+- a felhasználót bevonni a vizualizációba.
+
+A projekt teljesíti a Script nyelvek tárgy követelményeit.
+
+**Köszönöm szépen a Tanár úrnak az útmutatásokat!**
+""")
