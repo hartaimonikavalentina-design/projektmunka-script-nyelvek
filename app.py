@@ -10,7 +10,7 @@ import pandas as pd
 st.set_page_config(page_title="Meteorológiai idősorok – projektmunka", layout="wide")
 
 st.title("Meteorológiai idősorok feldolgozása Pythonban")
-st.subheader("hiányzó adatok, rugalmas beolvasás és interaktív megjelenítés")
+st.subheader("hiányzó adatok kezelése, rugalmas beolvasás és interaktív megjelenítés")
 
 st.markdown("""
 ### Készítette:
