@@ -1,1 +1,1 @@
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hartaimonikavalentina-design/projektmunka-script-nyelvek/blob/main/Futtatandó%20meterológia%20projektmunka_Hartai%20Mónika%20V._PPKE%20Script%20nyelvek.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/hartaimonikavalentina-design/projektmunka-script-nyelvek/blob/main/projektmunka.ipynb)
