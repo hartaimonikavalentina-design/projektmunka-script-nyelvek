@@ -41,95 +41,6 @@ st.markdown("""
 """)
 
 # ---------------------------------------------------------
-# 1. Bevezetés
-# ---------------------------------------------------------
-st.markdown("## 1. Bevezetés")
-
-st.markdown("""
-Tisztelt Tanár úr!
-
-A README-ben található *Open in Colab* gombbal a notebook egy kattintással megnyitható,  
-majd a Colab felületén futtatható.
-
-Az alábbi GitHub‑linken érhető el:  
-https://github.com/hartaimonikavalentina-design/projektmunka-script-nyelvek/tree/main
-
-Ebben a projektmunkában egy nagyméretű, valós meteorológiai adathalmazt dolgozok fel Python nyelv segítségével. 
-A választott adatforrás egy több százezer sort tartalmazó CSV-fájl (adatok meteorológia.csv), 
-amely egy meteorológiai állomás méréseinek több éves adatait tartalmazza. 
-Az adatok időbélyeggel, hőmérséklet-, szélsebesség- és légnyomás-értékekkel rendelkeznek.
-
-A feladat célja az volt, hogy olyan megoldást készítsek, amely:
-
-- rugalmasan olvassa be az adatokat,  
-- kezeli a hibás és hiányzó értékeket,  
-- vizuálisan is bemutatja az adatok főbb mintázatait,  
-- és lehetőséget ad a megjelenítés befolyásolására (szűrés, változóválasztás) anélkül, hogy magát az adatot módosítanám.
-
-Különösen fontos volt számomra, hogy a „nyers” adatok mögött milyen történet rajzolódik ki; 
-hogyan változik az évek során a hőmérséklet, mennyire megbízhatóak a mérések, 
-és mit kezdünk azzal, ha az adatok „nem tökéletesek”.
-""")
-
-# ---------------------------------------------------------
-# 2. Az adatforrás bemutatása
-# ---------------------------------------------------------
-st.markdown("## 2. Az adatforrás bemutatása")
-
-st.markdown("""
-A feldolgozott fájl neve: **adatok meteorológia.csv**.
-
-A fájl jellemzői:
-- mérete több mint 2,7 MB,
-- több százezer sor,
-- a fejléc a 6. sorban található,
-- az oszlopok pontosvesszővel (;) vannak elválasztva,
-- a szélsebesség oszlopban a hiányzó értékeket a -999 érték jelöli.
-
-A legfontosabb oszlopok:
-- **Time** – időbélyeg (dátum és idő),
-- **t** – hőmérséklet (°C),
-- **fs** – szélsebesség (m/s),
-- **p** – légnyomás (hPa).
-""")
-
-# ---------------------------------------------------------
-# 3. Adatbeolvasás és hibakezelés
-# ---------------------------------------------------------
-st.markdown("## 3. Adatbeolvasás és hibakezelés")
-
-st.markdown("""
-A projekt egyik kulcspontja a rugalmas adatbeolvasás volt. 
-A CSV elején metaadat-blokkok találhatók, ezért a fejléc nem az első sorban van.
-
-A beolvasás fő lépései:
-- hibás sorok átugrása (`on_bad_lines="skip"`),
-- a -999 értékek NaN-ná alakítása,
-- a dátumok konvertálása (`errors="coerce"`).
-""")
-
-# ---------------------------------------------------------
-# 4. Időbeli bontás és aggregáció
-# ---------------------------------------------------------
-st.markdown("## 4. Időbeli bontás és aggregáció")
-
-st.markdown("""
-A **Time** oszlopból két új oszlopot hoztam létre:
-- **Év**
-- **Hónap**
-
-Ez lehetővé tette:
-- éves átlagok számítását (t, fs, p),
-- havi átlagok számítását (t),
-- havi eloszlások (boxplot) készítését.
-""")
-
-# ---------------------------------------------------------
-# 5. Megjelenítés – grafikonok
-# ---------------------------------------------------------
-st.markdown("## 5. Megjelenítés – grafikonok")
-
-# ---------------------------------------------------------
 # ZIP → CSV → DataFrame beolvasás
 # ---------------------------------------------------------
 ZIP_PATH = "adatok_meteorologia.zip"
@@ -293,33 +204,41 @@ pivot_havi = havi_df.pivot(index="Ev", columns="Honap", values="atlag_homersekle
 st.line_chart(pivot_havi)
 
 # ---------------------------------------------------------
-# 6. Boxplot és havi eloszlások – szöveges rész
+# 6. Boxplot és havi eloszlások
 # ---------------------------------------------------------
 st.markdown("## 6. Boxplot és havi eloszlások")
 
 st.markdown("""
 A havi bontású hőmérséklet-eloszlások lehetővé teszik, hogy ne csak az átlagokat,
 hanem a teljes havi szórást, szélsőértékeket és mediánt is vizsgáljuk.
-
-A boxplot segítségével jól látható:
-- mely hónapokban nagyobb a hőingás,
-- hol vannak kiugró értékek,
-- hogyan változik a hőmérséklet eloszlása az évek során.
-
-Ez különösen hasznos a meteorológiai adatok megbízhatóságának és szezonális mintázatainak vizsgálatához.
 """)
 
 # ---------------------------------------------------------
-# Boxplot
+# Javított Boxplot – ugyanaz, mint a Colabban
 # ---------------------------------------------------------
 st.header("Havi hőmérséklet-eloszlások (boxplot)")
 
+honap_sorrend = [
+    "január", "február", "március", "április", "május", "június",
+    "július", "augusztus", "szeptember", "október", "november", "december"
+]
+
+honap_map = {
+    1: "január", 2: "február", 3: "március", 4: "április",
+    5: "május", 6: "június", 7: "július", 8: "augusztus",
+    9: "szeptember", 10: "október", 11: "november", 12: "december"
+}
+
+box_df["Hónap_név"] = box_df["Honap"].map(honap_map)
+
 fig_box = px.box(
     box_df,
-    x="Honap",
+    x="Hónap_név",
     y="Homerseklet",
+    category_orders={"Hónap_név": honap_sorrend},
     title="Havi hőmérséklet-eloszlások"
 )
+
 st.plotly_chart(fig_box, use_container_width=True)
 
 # ---------------------------------------------------------
@@ -352,39 +271,6 @@ fig_dash = px.box(
     title=f"{valasztott} havi eloszlása"
 )
 st.plotly_chart(fig_dash, use_container_width=True)
-
-# ---------------------------------------------------------
-# 7. Interaktív megjelenítés – a felhasználó szerepe
-# ---------------------------------------------------------
-st.markdown("## 7. Interaktív megjelenítés – a felhasználó szerepe")
-
-st.markdown("""
-A felhasználó az alkalmazásban:
-
-- kiválaszthatja a megjelenítendő változót (**t**, **fs**, **p**),
-- beállíthatja az elemzett év tartományát,
-- interaktív idősorokat és éves átlagokat vizsgálhat,
-- térképen megjelenik a Fertőrákos állomás helye.
-
-Ez a projekt egyik legfontosabb része, mert a megjelenítés dinamikusan változtatható,
-anélkül hogy az adatot módosítanánk.
-""")
-
-# ---------------------------------------------------------
-# 8. Sikeres és sikertelen utak, promptolás
-# ---------------------------------------------------------
-st.markdown("## 8. Sikeres és sikertelen utak, promptolás")
-
-st.markdown("""
-A projekt során több kihívás is felmerült:
-
-- A szélsebesség átlagolása elsőre hibás volt (minden év -999 értéket adott).
-- A CSV fejléc nem az első sorban volt → rugalmas beolvasásra volt szükség.
-- A promptolás segített a hibák felismerésében és javításában.
-
-Ezek a lépések jól mutatják, hogy a hibák nem akadályok,
-hanem a fejlesztési folyamat természetes részei.
-""")
 
 # ---------------------------------------------------------
 # 9. Összegzés
